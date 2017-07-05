@@ -1,2 +1,2 @@
 # es6
-es6 es7
+Personal practice es6 es7
