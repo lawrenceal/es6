@@ -301,20 +301,30 @@
     console.log(new Bar().number);
 
 
-    /*//实例属性 TODO es7
+    //实例属性 TODO es7
     class Baz{
 
         state = { //TODO this.state
             count: 0
         };
 
+        getName = () => {
+            console.log(this.name);
+        };
+
+        getCount(){
+            console.log(this.state.count);
+        }
+
         constructor(name, count){
             this.name = name;
             this.state.count = count;
         }
     }
-    console.log(new Baz('静态属性', 3).state.count);*/
-
+    let baz = new Baz('静态属性', 3);
+    console.log(baz.state.count);
+    baz.getName();
+    baz.getCount();
 
     console.groupEnd();
 }
