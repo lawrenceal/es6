@@ -1,5 +1,5 @@
 (() => {
-    //数组的解构赋值
+    console.group('数组的解构赋值');
 
     let [a, b, c] = [1, 2, 3];
     console.log("a = " + a + " b = " + b + " c = " + c);
@@ -35,10 +35,12 @@
     let [x3 = 1] = [undefined];
     console.log('x3 = ' + x3);
 
+    console.groupEnd();
 })();
 
 (() => {
-    //对象的解构赋值 TODO 变量必须与属性同名
+    console.group('对象的解构赋值');
+    // TODO 变量必须与属性同名
 
     var { foo, bar } = { foo: "aaa", bar: "bbb" };
     console.log("foo = " + foo + " bar = " + bar);
@@ -78,6 +80,11 @@
     var {0 : first, [arr.length - 1] : last} = arr;
     console.log("first = " + first + " last = " + last);
 
+    /*let {obj1, ...obj2} = {obj1: 1, a: 2, b: 3, c: 4, length: 4};
+    console.log(obj1);
+    console.log(obj2);*/
+
+    console.groupEnd();
 })();
 
 (() => {
