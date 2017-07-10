@@ -80,9 +80,10 @@
     var {0 : first, [arr.length - 1] : last} = arr;
     console.log("first = " + first + " last = " + last);
 
-    /*let {obj1, ...obj2} = {obj1: 1, a: 2, b: 3, c: 4, length: 4};
-    console.log(obj1);
-    console.log(obj2);*/
+    //TODO babel
+    /*var { checked, ...other } = {checked: true, className: "class", children: "Hello world!", onClick: function(){}};
+    console.log(checked);
+    console.log(other);*/
 
     console.groupEnd();
 })();
