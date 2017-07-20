@@ -153,3 +153,155 @@
 
     console.groupEnd();
 }
+
+
+
+/**
+ * promise原理与实现
+ *
+ * Promise 较通常的回调、事件/消息，在处理异步操作时具有显著的优势。
+ * 其中最为重要的一点是：Promise 在语义上代表了异步操作的主体。
+ * 这种准确、清晰的定位极大推动了它在编程中的普及，因为具有单一职责，
+ * 而且将份内事做到极致的事物总是具有病毒式的传染力。
+ * 分离输入输出参数、错误冒泡、串行/并行控制流等特性都成为 Promise 横扫异步操作编程领域的重要砝码，
+ * 以至于 ES6 都将其收录，并已在 Chrome、Firefox 等现代浏览器中实现。
+ *
+ * 优点：对象不受外界影响。三种状态 Sending Fulfilled Rejected。
+ * 一旦状态改变就不会再变。
+ *
+ * 缺点：无法取消，如果不设置回调函数，promise内部错误不会反应到外边。
+ * */
+(() => {
+
+    function Promise(fn){
+        let deferreds = [];
+
+        this.then = (onFulfilled) => {
+            deferreds.push(onFulfilled);
+            return this;
+        };
+
+        function resolve(value){
+            setTimeout(() => {
+                deferreds.forEach((deferred) => {
+                    deferred(value);
+                });
+            }, 0)
+        }
+
+        fn(resolve);
+    }
+
+    new Promise((resolve) => {
+        resolve(1);
+    }).then((value) => {
+        console.log(value);
+    }).then((value) => {
+        console.log(value);
+    });
+
+})();
+
+
+/**
+ * 引入状态
+ * */
+(() => {
+    function Promise(fn) {
+        var deferreds = [], state = 'pending', value = null;
+
+        this.then = function(onFulfilled){
+            if(state === 'pending'){
+                deferreds.push(onFulfilled);
+            }else{
+                onFulfilled(value);
+            }
+            return this;
+        };
+
+        function resolve(newValue){
+            value = newValue;
+            setTimeout(function(){
+
+                //何时设置状态fulfilled
+                state = 'fulfilled';
+                deferreds.forEach(function(deferred) {
+                    deferred(value);
+                });
+            }, 0);
+        }
+
+        fn(resolve);
+    }
+
+    new Promise((resolve) => {
+        resolve(212);
+    }).then((value) => {
+        console.log(value);
+    }).then((value) => {
+        console.log(value);
+    });
+})();
+
+
+/**
+ * 串行promise
+ * */
+(function(){
+
+    function Promise(fn){
+        var deferreds = [], state = 'pending', value = null;
+
+        this.then = function(onFulfilled){
+            return new Promise(function(resolve){
+                handle({
+                    onFulfilled: onFulfilled || null,
+                    resolve: resolve
+                });
+            });
+        };
+
+        function handle(deferred){
+            if(state === 'pending'){
+                deferreds.push(deferred);
+                return;
+            }
+
+            var ret = deferred.onFulfilled(value);
+            deferred.resolve(ret);
+        }
+
+        function resolve(newValue){
+            if(newValue && (typeof newValue === 'object' || typeof newValue === 'function')){
+                var then = newValue.then;
+                if(typeof then === 'function'){
+                    then.call(newValue, resolve);
+                    return;
+                }
+            }
+
+            //FIXME bridge promise 与 过程中 new Promise resolve不应该公用同一个 deferreds
+
+            value = newValue;
+            setTimeout(function(){
+                state = 'fulFilled';
+                deferreds.forEach(function (deferred) {
+                    handle(deferred);
+                })
+            }, 0);
+        }
+
+        fn(resolve);
+    }
+
+    new Promise(function(resolve){
+        resolve(123);
+    }).then(function(value){
+        return new Promise(function(resolve){
+            resolve(value + 1); //TODO resolve重复循环私有 deferreds ?
+        });
+    }).then(function(result){
+        console.log(result);
+    });
+
+})();
