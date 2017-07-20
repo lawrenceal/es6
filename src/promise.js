@@ -294,6 +294,7 @@
         fn(resolve);
     }
 
+    //当前demo共进入resolve6次
     new Promise(function(resolve){
         resolve(123);
     }).then(function(value){
