@@ -119,6 +119,26 @@
 
     //TODO let const class命令声明的全局变量，不再是"全局对象的属性"，为了保持兼容var和function声明的全局变量依旧是全局对象的属性
 
+})();
 
+(function(){
+
+    function func(){console.log('outer')}
+    (function () {
+        if(true){
+            function func(){console.log('inner')}
+        }
+        func();
+    })();
 
 })();
+
+{
+    function func1(){console.log('outer1')}
+    {
+        if(true){
+            function func1(){console.log('inner1')}
+        }
+        func1();
+    }
+}
