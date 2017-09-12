@@ -412,3 +412,24 @@
 
     console.groupEnd();
 }
+
+{
+    let {x, y, ...z} = {'x': 1, 'y': 2, 'a': 3, 'b': 4};
+
+    console.log(x);
+    console.log(y);
+    console.log(z);
+
+    let obj = {'name': 'lawrence', age: 25, get sex(){console.log('my sex is men'); return 'men'}};
+    let person = {...obj};
+    console.log(person);
+    console.log(Object.getOwnPropertyDescriptors(person));
+
+    let newPerson = {};
+    Object.defineProperties(newPerson, Object.getOwnPropertyDescriptors(person));
+    console.log(newPerson);
+
+    let newPerson1 = Object.create(Object.getPrototypeOf(person), Object.getOwnPropertyDescriptors(person));
+    console.log(newPerson1);
+
+}
